@@ -1,0 +1,33 @@
+<div class="main-container">
+<button nz-button nzType="primary" (click)="toggleAddUser()">
+    Add New User
+</button>
+<app-user-form *ngIf="isAddUserVisible" (userAdded)="loadUsers()"></app-user-form>
+  <nz-table #basicTable [nzData]="users" [nzBordered]="true" [nzSize]="'small'" [nzPageSize]="6">
+    <thead>
+      <tr>
+        <th nzWidth="25%">First Name</th>
+        <th nzWidth="25%">Last Name</th>
+        <th nzWidth="25%">Email</th>
+        <th nzWidth="25%">Age</th>
+        <th nzWidth="25%">Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of basicTable.data">
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.age }}</td>
+        <td>{{ user.address }}</td>
+        <td>
+            <button nz-button nzType="primary" (click)="editUser(user)">
+                <i nz-icon nzType="edit" nzTheme="outline"></i>
+            </button>
+            <button nz-button nzType="primary" (click)="deleteUser(user)">
+                <i nz-icon nzType="delete" nzTheme="outline"></i>
+            </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>

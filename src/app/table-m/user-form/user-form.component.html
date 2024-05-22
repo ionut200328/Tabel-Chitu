@@ -1,0 +1,79 @@
+<div *ngIf="userForm">
+  <form [formGroup]="userForm" (ngSubmit)="addNewUser()">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="firstName">First Name</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="firstName" id="firstName" />
+        </nz-form-control>
+    </nz-form-item>
+    <p *ngIf="firstName?.touched && userForm.controls['firstName'].hasError('invalidSymbols')" class="error-message">
+        Only letters are allowed
+    </p>
+    <p *ngIf="
+            firstName?.touched &&
+            userForm.controls['firstName'].hasError('required')
+          " class="error-message">
+        This field is required
+    </p>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="lastName">Last Name</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="lastName" id="lastName" />
+        </nz-form-control>
+    </nz-form-item>
+    <p *ngIf="lastName?.touched && userForm.controls['lastName'].hasError('invalidSymbols')" class="error-message">
+        Only letters are allowed
+    </p>
+    <p *ngIf="
+            lastName?.touched &&
+            userForm.controls['lastName'].hasError('required')
+          " class="error-message">
+        This field is required
+    </p>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="email">Email</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="email" id="email" />
+        </nz-form-control>
+    </nz-form-item>
+    <p *ngIf="email?.touched && userForm.controls['email'].hasError('email')" class="error-message">
+        Invalid email
+    </p>
+    <p *ngIf="
+            email?.touched &&
+            userForm.controls['email'].hasError('required')
+          " class="error-message">
+        This field is required
+    </p>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="age">Age</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="age" id="age" />
+        </nz-form-control>
+    </nz-form-item>
+    <p *ngIf="age?.touched && userForm.controls['age'].hasError('age')" class="error-message">
+        Invalid age
+    </p>
+    <p *ngIf="
+            age?.touched &&
+            userForm.controls['age'].hasError('required')
+          " class="error-message">
+        This field is required
+    </p>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="Address">Address</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="address" id="address" />
+        </nz-form-control>
+    </nz-form-item>
+    <p *ngIf="address?.touched && userForm.controls['address'].hasError('required')" class="error-message">
+        This field is required
+    </p>
+    <nz-form-item>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <button nz-button nzType="primary" type="submit" [disabled]="!userForm.valid">Submit</button>
+        </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+      
