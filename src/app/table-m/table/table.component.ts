@@ -46,7 +46,8 @@ export class TableComponent implements OnInit {
   addUser() {
     this.modalService.create({
       nzTitle: 'Add User',
-      nzContent: UserFormComponent
+      nzContent: UserFormComponent,
+      nzData: { isEdit: false },
     });
   }
 
