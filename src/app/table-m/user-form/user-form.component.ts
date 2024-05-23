@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,8 +9,7 @@ import { User } from '../helper/models/user';
 import { UserService } from '../helper/user.service';
 import { LetterValidator } from '../helper/form.helper';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Inject } from '@angular/core';
-import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
+import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-user-form',
@@ -18,16 +17,20 @@ import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
-  @Output() userAdded = new EventEmitter<void>();
   @Input() user: User = {} as User;
+  @Input() isEdit = false;
+
+  readonly nzModalData = inject(NZ_MODAL_DATA);
 
   userForm!: FormGroup<any>;
 
   constructor(private fb: FormBuilder, private userService: UserService, private message: NzMessageService,
-    @Inject(NZ_MODAL_DATA) public data: User
+    private modalRef: NzModalRef
   ) { }
 
   ngOnInit(): void {
+    this.isEdit = this.nzModalData.isEdit;
+    this.user = this.nzModalData.user;
     this.createForm(this.user);
   }
 
@@ -39,6 +42,7 @@ export class UserFormComponent implements OnInit {
       age: [user?.age, [Validators.required, Validators.min(18), Validators.max(120)]],
       address: [user?.address, [Validators.required, Validators.maxLength(100)]]
     });
+    console.log(this.isEdit);
   }
 
   addNewUser() {
@@ -54,12 +58,33 @@ export class UserFormComponent implements OnInit {
       next: () => {
         this.message.success('User added successfully');
         console.log(this.userService.users);
-        this.userAdded.emit();
       },
       error: () => {
         this.message.error('An error occurred');
       }
     });
+    this.modalRef.close(true);
+  }
+
+  editUser() {
+    const updatedUser: User = {
+      id: this.user.id,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      email: this.email.value,
+      age: this.age.value,
+      address: this.address.value
+    }
+    this.userService.editUser(updatedUser).subscribe({
+      next: () => {
+        this.message.success('User updated successfully');
+        console.log(this.userService.users);
+      },
+      error: () => {
+        this.message.error('An error occurred');
+      }
+    });
+    this.modalRef.close(true);
   }
 
   get firstName(): AbstractControl {

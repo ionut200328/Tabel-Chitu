@@ -2,10 +2,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../helper/models/user';
 import { UserService } from '../helper/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { ModalOptions, NzModalService } from 'ng-zorro-antd/modal';
 import { UserFormComponent } from '../user-form/user-form.component';
 import { BehaviorSubject } from 'rxjs';
-import { ModalConfig } from 'ng-zorro-antd/core/config';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-table',
@@ -38,9 +37,6 @@ export class TableComponent implements OnInit {
     });
   }
 
-  toggleAddUser() {
-    this.isAddUserVisible = !this.isAddUserVisible;
-  }
 
   loadUsers() {
     console.log('load users');
@@ -58,9 +54,22 @@ export class TableComponent implements OnInit {
     console.log('edit user', user);
     this.modalService.create({
       nzTitle: 'Edit User',
-      nzContent: UserFormComponent
-    }
-    );
+      nzContent: UserFormComponent,
+      nzData: { user, isEdit: true },
+    });
+  }
+
+  deleteUser(user: User) {
+    console.log('delete user', user);
+    this.userService.deleteUser(user.id).subscribe({
+      next: () => {
+        this.message.success('User deleted successfully');
+        this.getUsers();
+      },
+      error: () => {
+        this.message.error('An error occurred');
+      }
+    });
   }
 
   onPageChange(pageIndex: number) {
