@@ -2,8 +2,10 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../helper/models/user';
 import { UserService } from '../helper/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { ModalOptions, NzModalService } from 'ng-zorro-antd/modal';
 import { UserFormComponent } from '../user-form/user-form.component';
+import { BehaviorSubject } from 'rxjs';
+import { ModalConfig } from 'ng-zorro-antd/core/config';
 
 @Component({
   selector: 'app-table',
@@ -13,11 +15,12 @@ import { UserFormComponent } from '../user-form/user-form.component';
 export class TableComponent implements OnInit {
   @Output() userAdded = new EventEmitter<void>();
 
-  users: User[] = [];
+  users: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  pageIndex = 1;
 
   isAddUserVisible = false;
 
-  constructor(private userService: UserService, private message: NzMessageService) { }
+  constructor(private userService: UserService, private message: NzMessageService, private modalService: NzModalService) { }
 
   ngOnInit() {
     this.getUsers();
@@ -26,7 +29,7 @@ export class TableComponent implements OnInit {
   getUsers() {
     this.userService.getUsers().subscribe({
       next: (users) => {
-        this.users = users;
+        this.users = new BehaviorSubject<User[]>(users);
         this.message.success('Users loaded successfully');
       },
       error: () => {
@@ -44,20 +47,23 @@ export class TableComponent implements OnInit {
     this.getUsers();
   }
 
-  editUser(user: User) {
-
+  addUser() {
+    this.modalService.create({
+      nzTitle: 'Add User',
+      nzContent: UserFormComponent
+    });
   }
 
-  deleteUser(user: User) {
-    this.userService.deleteUser(user.id).subscribe({
-      next: () => {
-        this.users = this.users.filter(u => u.id !== user.id);
-        this.message.success('User deleted successfully');
-      },
-      error: () => {
-        this.message.error('An error occurred');
-      }
-    });
+  editUser(user: User) {
+    console.log('edit user', user);
+    this.modalService.create({
+      nzTitle: 'Edit User',
+      nzContent: UserFormComponent
+    }
+    );
+  }
 
+  onPageChange(pageIndex: number) {
+    this.pageIndex = pageIndex;
   }
 }

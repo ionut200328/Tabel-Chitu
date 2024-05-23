@@ -10,6 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { UserFormComponent } from './user-form/user-form.component';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [TableComponent, UserFormComponent],
@@ -22,6 +25,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
     NzInputModule,
     NzSelectModule,
     NzButtonModule,
+    NzPaginationModule,
+    NzIconModule,
+    NzModalModule,
 
     // *required for forms!
     ReactiveFormsModule

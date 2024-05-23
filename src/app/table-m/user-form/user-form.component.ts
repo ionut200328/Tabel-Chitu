@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,7 +9,8 @@ import { User } from '../helper/models/user';
 import { UserService } from '../helper/user.service';
 import { LetterValidator } from '../helper/form.helper';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { first } from 'rxjs';
+import { Inject } from '@angular/core';
+import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-user-form',
@@ -18,14 +19,16 @@ import { first } from 'rxjs';
 })
 export class UserFormComponent implements OnInit {
   @Output() userAdded = new EventEmitter<void>();
+  @Input() user: User = {} as User;
 
-  userForm!: FormGroup<any>
-  user: User = {} as User;
+  userForm!: FormGroup<any>;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private message: NzMessageService) { }
+  constructor(private fb: FormBuilder, private userService: UserService, private message: NzMessageService,
+    @Inject(NZ_MODAL_DATA) public data: User
+  ) { }
 
   ngOnInit(): void {
-    this.createForm();
+    this.createForm(this.user);
   }
 
   createForm(user?: User) {
